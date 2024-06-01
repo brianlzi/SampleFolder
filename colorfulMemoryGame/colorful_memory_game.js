@@ -4,6 +4,7 @@ let selectedCards = [];
 let score = 0;
 let timeLeft = 30;
 let gameInterval;
+let cardId = 0;
 
 const startbtn = document.getElementById('startbtn');
 const gameContainer = document.getElementById('game-container');
@@ -13,10 +14,12 @@ const timerElement = document.getElementById('timer');
 function generateCards() {
     for (const color of cards) {
         const card = document.createElement('div');
+        card.setAttribute('id', cardId);
         card.classList.add('card');
         card.dataset.color = color;
         card.textContent = '?';
         gameContainer.appendChild(card);
+        cardId += 1;
     }
 }
 
@@ -30,6 +33,7 @@ function shuffle(array) {
 
 function handleCardClick(event) {
     const card = event.target;
+    console.log(card)
     if (!card.classList.contains('card') || card.classList.contains('matched')) {
         return;
     }
@@ -43,7 +47,7 @@ function handleCardClick(event) {
 
 function checkMatch() {
     const [card1, card2] = selectedCards;
-    if (card1.dataset.color === card2.dataset.color) {
+    if ((card1.dataset.color === card2.dataset.color) & (card1.id != card2.id)) {
         card1.classList.add('matched');
         card2.classList.add('matched');
         score += 2;
@@ -61,6 +65,7 @@ function startGame() {
     let timeLeft = 30;
     startbtn.disabled = true;
     score = 0; // Reset score to zero
+    cardId = 0; // Reset cardId to zero
     scoreElement.textContent = `Score: ${score}`;
     startGameTimer(timeLeft);
     cards = shuffle(colors.concat(colors));
